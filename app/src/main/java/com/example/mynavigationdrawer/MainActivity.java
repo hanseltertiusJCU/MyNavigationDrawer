@@ -28,6 +28,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Toolbar toolbar;
     ActionBarDrawerToggle toggle;
 
+    String APP_BAR_TITLE = "app_bar_title";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +46,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .beginTransaction()
                     .replace(R.id.content_main,currentFragment)
                     .commit();
+        } else {
+
+            // Get String value from bundle
+            String titleAppBar = savedInstanceState.getString(APP_BAR_TITLE);
+
+            // Set title in Action Bar
+            if(getSupportActionBar() != null){
+                getSupportActionBar().setTitle(titleAppBar);
+            }
         }
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -119,5 +130,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportActionBar().setTitle(title);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+
+        String appBarTitle = "";
+
+        // Set String value to action bar title
+        if(getSupportActionBar() != null){
+            appBarTitle = (String) getSupportActionBar().getTitle();
+        }
+        // Put string into bundle
+        outState.putString(APP_BAR_TITLE, appBarTitle);
+        super.onSaveInstanceState(outState);
     }
 }
