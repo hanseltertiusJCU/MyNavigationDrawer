@@ -4,6 +4,8 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -35,6 +37,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle("Home");
+
+        if (savedInstanceState == null){
+            Fragment currentFragment = new HomeFragment();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.content_main,currentFragment)
+                    .commit();
+        }
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,8 +82,42 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.removeDrawerListener(toggle);
     }
 
+    @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        return false;
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+        Bundle bundle = new Bundle();
+        Fragment fragment = null;
+        String title = "";
+        if (id == R.id.nav_home){
+            title = "Home";
+            fragment = new HomeFragment();
+        } else if (id == R.id.nav_camera) {
+            title = "Camera";
+            fragment = new PageFragment();
+            bundle.putString(PageFragment.EXTRAS,"Camera");
+            fragment.setArguments(bundle);
+        } else if (id == R.id.nav_gallery) {
+            title = "Gallery";
+            fragment = new PageFragment();
+            bundle.putString(PageFragment.EXTRAS,"Gallery");
+            fragment.setArguments(bundle);
+        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_send) {
+        }
+        if (fragment != null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.content_main, fragment)
+                    .commit();
+        }
+
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setTitle(title);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }
